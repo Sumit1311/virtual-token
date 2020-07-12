@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import WebhooksRouter from "./routes/webhooks.router";
 import HttpStatus from "http-status-codes";
+import * as db from "./database/"
 
 dotenv.config();
 
@@ -33,8 +34,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+app.listen(port, async () => {
+    try {
+        console.log(`Server listening on port ${port}`);
+        await db.connect();
+    } catch (error) {
+        console.error(error);
+    }
 });
-
-
