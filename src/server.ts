@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import WebhooksRouter from "./routes/webhooks.router";
+import AccountsRouter from "./routes/accounts.router";
 import HttpStatus from "http-status-codes";
 import * as db from "./database/"
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/webhooks', new WebhooksRouter().getExpressRouter());
+app.use('/accounts', new AccountsRouter().getExpressRouter());
 
 app.get('/', (req, res, next) => {
     return res.status(200).send({ message: 'Welcome to virtual token APIs' });

@@ -15,6 +15,7 @@ export interface IAccount extends Document {
     parentSid: string;
     parentAuthToken: string;
     lastToken: number;
+    password: string;
     customers: Array<ICustomer>;
 }
 
@@ -31,6 +32,7 @@ const AccountSchema: Schema = new Schema({
     parentSid: String,
     parentAuthToken: String,
     lastToken: Number,
+    password: String,
     customers: [CustomerSchema]
 });
 
