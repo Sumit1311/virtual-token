@@ -6,7 +6,7 @@ export default class TwilioResponseBuilder {
 
     static getRejectionResponse() {
         let twimlResponse: VoiceResponse = new VoiceResponse();
-        twimlResponse.reject({ reason: "rejected" });
+        twimlResponse.reject({ reason: "busy" });
         return <ITwilioResponse>{ content: twimlResponse.toString(), contentType: MimeTypes.lookup("xml") };
     }
 }

@@ -6,6 +6,8 @@ export default class AccountRepository {
         if (!account) {
             throw new Error();
         }
+        account.lastToken ? (account.lastToken)++ : account.lastToken = 1;
+        accountDoc.customers[0].token = account.lastToken;
         account.customers.push(accountDoc.customers[0]);
         return account.save();
     }

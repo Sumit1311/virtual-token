@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface ICustomer extends Document {
     _id: string;
     customerId: string;
-    token: string;
+    token: number;
     mobileNo: string;
 }
 
@@ -16,6 +16,7 @@ export interface IAccount extends Document {
     parentAuthToken: string;
     lastToken: number;
     password: string;
+    mobileNo: string;
     customers: Array<ICustomer>;
 }
 
@@ -33,6 +34,7 @@ const AccountSchema: Schema = new Schema({
     parentAuthToken: String,
     lastToken: Number,
     password: String,
+    mobileNo: String,
     customers: [CustomerSchema]
 });
 

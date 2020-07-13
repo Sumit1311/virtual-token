@@ -1,12 +1,13 @@
-import express, { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
-import cors from "cors";
-import WebhooksRouter from "./routes/webhooks.router";
-import AccountsRouter from "./routes/accounts.router";
-import HttpStatus from "http-status-codes";
-import * as db from "./database/"
 
 dotenv.config();
+
+import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
+import webhooksRouter from "./routes/webhooks.router";
+import accountsRouter from "./routes/accounts.router";
+import HttpStatus from "http-status-codes";
+import * as db from "./database/";
 
 let app = express();
 let port = process.env.PORT || 3000;
@@ -15,8 +16,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/webhooks', new WebhooksRouter().getExpressRouter());
-app.use('/accounts', new AccountsRouter().getExpressRouter());
+app.use('/api/v1/accounts', accountsRouter);
+app.use('/webhooks', webhooksRouter);
 
 app.get('/', (req, res, next) => {
     return res.status(200).send({ message: 'Welcome to virtual token APIs' });
