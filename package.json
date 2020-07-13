@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/server.js",
-    "tscwatch": "tsc -w",
+    "start": "node_modules/.bin/tsc && node dist/server.js",
+    "tscwatch": "node_modules/.bin/tsc -w",
     "nodemon": "nodemon dist/server.js"
   },
   "repository": {

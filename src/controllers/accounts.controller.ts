@@ -1,6 +1,6 @@
 import AccountService from "../services/account.service";
 import { Request, Response } from "express";
-import AddAccountDTO from "../dto/addAccountDTO";
+import AddAccountDTO from "../dto/AddAccountDTO";
 import ResponseBuilder from "../helpers/http/ResponseBuilder";
 import HttpStatus from "http-status-codes";
 

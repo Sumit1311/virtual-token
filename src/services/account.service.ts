@@ -1,5 +1,5 @@
 import AccountRepository from "../repositories/account.repository";
-import AddAccountDTO from "../dto/addAccountDTO";
+import AddAccountDTO from "../dto/AddAccountDTO";
 import toAccountSchema from "../database/schemas/toAccountSchema";
 import TwilioSubAccountRepository from "../repositories/twilio/subaccount.repository";
 

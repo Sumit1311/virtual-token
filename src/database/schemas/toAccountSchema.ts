@@ -1,6 +1,6 @@
 import AccountModel, { IAccount, ICustomer } from "../models/account";
 import AddCustomerDTO from "../../dto/AddCustomerDTO";
-import AddAccountDTO from "../../dto/addAccountDTO";
+import AddAccountDTO from "../../dto/AddAccountDTO";
 
 export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO) {
     if (data.constructor.name === "AddAccountDTO") {
