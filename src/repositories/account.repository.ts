@@ -21,19 +21,32 @@ export default class AccountRepository {
         }
     }
 
-    async findAccountBySid(accountDoc: IAccount) {
-        let account = this._getAccountBySid(accountDoc);
-        if (account) {
+    async findAccountBySid(accountDoc: IAccount, projection: any = null) {
+        let account = await this._getAccountBySid(accountDoc, projection);
+        if (account == null) {
             throw new Error();
         } else {
             return account;
         }
     }
 
-    private async _getAccountBySid(account: IAccount) {
+    private async _getAccountBySid(account: IAccount, projection: any = null) {
         let accountRecord = await AccountModel.findOne({
             sid: account.sid
-        });
+        }, projection);
         return accountRecord;
+    }
+
+    async getCustomers(account: IAccount, { limit }: any) {
+        return await this.findAccountBySid(account, {
+            customers: {
+                $slice: limit
+            }
+        });
+    }
+
+    async deleteFrontCustomer(account: IAccount) {
+        account.customers.shift();
+        return await account.save();
     }
 }

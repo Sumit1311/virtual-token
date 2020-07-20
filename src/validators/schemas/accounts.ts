@@ -6,3 +6,8 @@ export const create = Joi.object({
     authToken: Joi.string().required(),
     mobileNo: Joi.string().required()
 });
+
+export const callCustomers =Joi.object({
+    number: Joi.string().required(),
+    sid:Joi.string().required()
+});

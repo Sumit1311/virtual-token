@@ -14,3 +14,15 @@ export const validateBody = (schema: SchemaLike) => {
         return next();
     }
 };
+
+export const validateQuery = (schema: SchemaLike) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const response = ResponseBuilder.getDefaultResponse();
+        const error = joiHelper.validateObjectSchema(req.query, schema);
+        if (error) {
+            response.body = error;
+            return res.status(response.status).send(response);
+        }
+        return next();
+    }
+};

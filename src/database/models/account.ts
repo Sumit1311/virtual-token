@@ -1,10 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { number } from 'joi';
 
 export interface ICustomer extends Document {
     _id: string;
     customerId: string;
     token: number;
     mobileNo: string;
+    called: number;
 }
 
 export interface IAccount extends Document {
@@ -23,7 +25,11 @@ export interface IAccount extends Document {
 const CustomerSchema: Schema = new Schema({
     customerId: String,
     token: Number,
-    mobileNo: String
+    mobileNo: String,
+    called: {
+        type: Number,
+        default: 0
+    }
 });
 
 const AccountSchema: Schema = new Schema({

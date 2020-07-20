@@ -12,5 +12,5 @@ export default class WebhooksService {
     async enqueue(body:AddCustomerDTO) {
         await this._accountRepository.addCustomer(toAccountSchema(body));
         return this._webhooksRepository.getEnqueueResponse();
-    }
+    }   
 }

@@ -11,4 +11,8 @@ export default class WebhooksController {
         let response: ITwilioResponse = await WebhooksController.webhooksService.enqueue(body);
         return res.contentType(response.contentType).end(response.content);
     }
+
+    static async gatherCustomerResponse(req:Request, res:Response) {
+        
+    }
 }

@@ -1,5 +1,4 @@
 import TwilioClient from "./client";
-import twilio, { Twilio } from "twilio";
 import { AccountListInstance } from "twilio/lib/rest/api/v2010/account";
 import ITwilioSubAccount from "./ISubAccount";
 
