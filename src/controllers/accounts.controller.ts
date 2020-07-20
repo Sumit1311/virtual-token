@@ -7,6 +7,7 @@ import CallCustomerDTO from "../dto/CallCustomerDTO";
 
 export default class AccountController {
     static accountService: AccountService = new AccountService();
+
     static async add(req: Request, res: Response) {
         const response = ResponseBuilder.getDefaultResponse();
         try {
@@ -22,6 +23,7 @@ export default class AccountController {
         }
         res.status(response.status).send(response).end();
     }
+    
     static async call(req: Request, res: Response) {
         const response = ResponseBuilder.getDefaultResponse();
         try {

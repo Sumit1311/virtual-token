@@ -1,4 +1,4 @@
-import AccountModel, { IAccount } from "../database/models/account";
+import AccountModel, { IAccount, ICustomer } from "../database/models/account";
 
 export default class AccountRepository {
     async addCustomer(accountDoc: IAccount) {
@@ -37,16 +37,20 @@ export default class AccountRepository {
         return accountRecord;
     }
 
-    async getCustomers(account: IAccount, { limit }: any) {
-        return await this.findAccountBySid(account, {
-            customers: {
-                $slice: limit
-            }
-        });
+    async getCustomers(account: IAccount) {
+        let result = await this.findAccountBySid(account);
+        this.sortCustomersByToken(result);
+        return result;
     }
 
     async deleteFrontCustomer(account: IAccount) {
         account.customers.shift();
         return await account.save();
+    }
+
+    async sortCustomersByToken(account: IAccount) {
+        account.customers.sort((a: ICustomer, b: ICustomer) => {
+            return (a.token - b.token);
+        });
     }
 }

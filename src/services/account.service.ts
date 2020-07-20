@@ -21,15 +21,15 @@ export default class AccountService {
     async call(body: CallCustomerDTO) {
         const account = toAccountSchema(body);
         const { number: limit } = body;
-        const accountRecord = await this._accountRepository.getCustomers(account, { limit });
-        for (let customer of accountRecord.customers) {
+        let accountRecord = await this._accountRepository.getCustomers(account);
+        for (let i = 0; accountRecord.customers.length != 0 && i < limit; i++) {
             await this._voiceRepository.callCustomer(<ITwilioCall>{
                 sid: accountRecord.sid,
                 authToken: accountRecord.authToken,
                 from: accountRecord.phoneNumber,
-                to: customer.mobileNo
+                to: accountRecord.customers[0].mobileNo
             });
-            await this._accountRepository.deleteFrontCustomer(accountRecord);
+            accountRecord = await this._accountRepository.deleteFrontCustomer(accountRecord);
         };
     }
 }
