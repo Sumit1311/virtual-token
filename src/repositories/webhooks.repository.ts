@@ -15,7 +15,7 @@ export default class WebhooksRepository {
         } else if (data.channel === constants.ONERING) {
             return {
                 contentType: MimeTypes.lookup("text"),
-                response: "You are added to the queue"
+                response: "You are in the waiting queue. Your token number is 1. You will be notified before 15 mins of your turn."
             }
         } else {
             return {

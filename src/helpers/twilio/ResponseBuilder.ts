@@ -12,7 +12,7 @@ export default class TwilioResponseBuilder {
 
     static getCustomerCallResponse() {
         let twimlResponse: VoiceResponse = new VoiceResponse();
-        twimlResponse.say("Thank you for waiting in queue. You can visit the shop now.");
+        twimlResponse.say("Thank you for waiting in queue. Your turn has come. Please visit the shop now");
         /*twimlResponse.say("Are you visiting the shop now?");
         twimlResponse.gather({
             action: '/get-customer-response',
