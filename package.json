@@ -26,6 +26,7 @@
     "@types/joi": "^14.3.4",
     "@types/mime-types": "^2.1.0",
     "@types/mongoose": "^5.7.31",
+    "@types/uuid": "^8.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -35,6 +36,7 @@
     "mongoose": "^5.9.23",
     "tsc": "^1.20150623.0",
     "twilio": "^3.48.0",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "uuid": "^8.2.0"
   }
 }

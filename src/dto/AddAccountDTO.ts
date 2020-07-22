@@ -3,6 +3,7 @@ export default class AddAccountDTO {
     sid: string = "";
     authToken: string = "";
     mobileNo: string = "";
+    
     constructor(data: any) {
         this.phoneNumber = data.phoneNumber;
         this.sid = data.sid;

@@ -1,10 +1,10 @@
 export default class AddCustomerDTO {
-    sid: string = "";
     mobileNo: string = "";
     caller: string;
+    channel:string;
     constructor(data: any) {
-        this.sid = data.AccountSid;
-        this.mobileNo = data.From;
-        this.caller = data.Caller;
+        this.mobileNo = data.From || data.from;
+        this.caller = data.Caller || data.caller;
+        this.channel = data._channel;
     }
 }

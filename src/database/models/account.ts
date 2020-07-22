@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { number } from 'joi';
+import { ChannelTypeEnum } from '../../enums/ChannelTypeEnum';
 
 export interface ICustomer extends Document {
     _id: string;
@@ -7,6 +7,8 @@ export interface ICustomer extends Document {
     token: number;
     mobileNo: string;
     called: number;
+    active: boolean;
+    channel: ChannelTypeEnum;
 }
 
 export interface IAccount extends Document {
@@ -20,6 +22,7 @@ export interface IAccount extends Document {
     password: string;
     mobileNo: string;
     customers: Array<ICustomer>;
+    accountId: string;
 }
 
 const CustomerSchema: Schema = new Schema({
@@ -29,7 +32,12 @@ const CustomerSchema: Schema = new Schema({
     called: {
         type: Number,
         default: 0
-    }
+    },
+    active: {
+        type: Boolean,
+        default: true
+    },
+    channel: Number
 });
 
 const AccountSchema: Schema = new Schema({
@@ -41,6 +49,7 @@ const AccountSchema: Schema = new Schema({
     lastToken: Number,
     password: String,
     mobileNo: String,
+    accountId: String,
     customers: [CustomerSchema]
 });
 

@@ -1,6 +1,7 @@
 export default class CallCustomerDTO {
     number: number = 5;
-    sid: string = "";
+    accountId: string = "";
+
     constructor(data: any) {
         let n: number;
         n = parseInt(data.number);
@@ -8,6 +9,6 @@ export default class CallCustomerDTO {
             throw new Error("Not a number");
         }
         this.number = n;
-        this.sid = data.sid;
+        this.accountId = data.accountId;
     }
 }

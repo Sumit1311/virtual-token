@@ -2,6 +2,8 @@ import WebhooksRepository from "../repositories/webhooks.repository";
 import AddCustomerDTO from "../dto/AddCustomerDTO";
 import AccountRepository from "../repositories/account.repository";
 import toAccountSchema from "../database/schemas/toAccountSchema";
+import constants from "../constants";
+import { date } from "joi";
 
 export default class WebhooksService {
     private _webhooksRepository: WebhooksRepository = new WebhooksRepository();
@@ -9,8 +11,9 @@ export default class WebhooksService {
     constructor() {
     }
 
-    async enqueue(body:AddCustomerDTO) {
+    async enqueue(body: AddCustomerDTO) {
         await this._accountRepository.addCustomer(toAccountSchema(body));
-        return this._webhooksRepository.getEnqueueResponse();
-    }   
+        return this._webhooksRepository.getEnqueueResponse(body);
+    }
+
 }

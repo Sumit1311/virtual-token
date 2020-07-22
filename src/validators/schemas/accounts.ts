@@ -7,7 +7,7 @@ export const create = Joi.object({
     mobileNo: Joi.string().required()
 });
 
-export const callCustomers =Joi.object({
+export const callCustomers = Joi.object({
     number: Joi.string().required(),
-    sid:Joi.string().required()
+    accountId: Joi.string().required()
 });
