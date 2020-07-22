@@ -9,8 +9,8 @@ export default class WebhooksController {
         try {
             console.log(req.query);
             let body: AddCustomerDTO = new AddCustomerDTO({ ...req.query, _channel: req.params.channel });
-            let response: any = await WebhooksController.webhooksService.enqueue(body);
-            return res.contentType(response.contentType).end(response.content);
+            let content: any = await WebhooksController.webhooksService.enqueue(body);
+            return res.contentType(content.contentType).end(content.response);
         } catch (error) {
             res.status(500).end("Internal Server Error");
         };

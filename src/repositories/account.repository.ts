@@ -44,21 +44,12 @@ export default class AccountRepository {
     }
 
     async getCustomers(account: IAccount) {
-        let result = await this._getAccountByAccountId(account, {
-            customers: {
-                $elemMatch: {
-                    active: true
-                }
-            },
-            sid: 1,
-            authToken: 1,
-            phoneNumber: 1,
-            accountId: 1
-        });
+        let result = await this._getAccountByAccountId(account);
         if (result === null) {
             throw new Error(constants.INVALID_ACCOUNT_ID);
         }
         this.sortCustomersByToken(result);
+        this.filterActiveCustomers(result);
         return result;
     }
 
@@ -76,6 +67,12 @@ export default class AccountRepository {
         })
     }
 
+    filterActiveCustomers(account: IAccount) {
+        let customers = account.customers.filter((v) => {
+            return (v.active === true)
+        });
+        account.customers = customers;
+    }
     sortCustomersByToken(account: IAccount) {
         account.customers.sort((a: ICustomer, b: ICustomer) => {
             return (a.token - b.token);

@@ -25,6 +25,7 @@ export default class AccountService {
         const { number: limit } = body;
         let accountRecord = await this._accountRepository.getCustomers(account);
         for (let i = 0; (i < accountRecord.customers.length) && (i < limit); i++) {
+            console.log(`${i}, ${limit}`);
             await this._voiceRepository.callCustomer(<ITwilioCall>{
                 sid: accountRecord.sid,
                 authToken: accountRecord.authToken,
@@ -33,6 +34,7 @@ export default class AccountService {
                 to: getCallingPrefix(accountRecord.customers[i].channel) + accountRecord.customers[i].mobileNo
             });
             await this._accountRepository.deleteFrontCustomer(accountRecord, i);
+            console.log(`${i}, ${limit}`);
         };
     }
 }
