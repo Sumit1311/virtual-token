@@ -15,15 +15,15 @@ export default class TwilioResponseBuilder {
         let twimlResponse: VoiceResponse = new VoiceResponse();
         twimlResponse.say("Thank you for waiting in queue.");
         twimlResponse.pause({
-            length:1
+            length: 1
         });
         twimlResponse.say("Your turn has come. ");
         twimlResponse.pause({
-            length:1
+            length: 1
         });
         twimlResponse.say("Please visit the shop now");
         twimlResponse.pause({
-            length:1
+            length: 1
         });
         /*twimlResponse.say("Are you visiting the shop now?");
         twimlResponse.gather({
@@ -31,5 +31,9 @@ export default class TwilioResponseBuilder {
             input: ['speech']
         }).say("Say yes or no");*/
         return <ITwilioResponse>{ content: twimlResponse.toString(), contentType: MimeTypes.lookup("xml") };
+    }
+
+    static getCustomerSMSResponse() {
+        return { content: "Thank you for waiting in queue. Your turn has come. Please visit the shop now" };
     }
 }

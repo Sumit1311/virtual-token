@@ -5,17 +5,16 @@ import TwilioSubAccountRepository from "../repositories/twilio/subaccount.reposi
 import CallCustomerDTO from "../dto/CallCustomerDTO";
 import TwilioVoiceRepository from "../repositories/twilio/voice.repository";
 import ITwilioCall from "../helpers/twilio/ICall";
-import { ChannelTypeEnum } from "../enums/ChannelTypeEnum";
 import { getCallingPrefix } from "../helpers";
 import { NotificationTypeEnum } from "../enums/NotificationTypeEnum";
-import { getEnvValue } from "../helpers/env";
-import { EnvVarTypeEnum } from "../enums/EnvVarTypeEnum";
+import TwilioSMSRepository from "../repositories/twilio/sms.repository";
+import ITwilioSms from "../helpers/twilio/ISms";
 
 export default class AccountService {
     private _accountRepository: AccountRepository = new AccountRepository();
     private _subAccountRepository: TwilioSubAccountRepository = new TwilioSubAccountRepository();
     private _voiceRepository: TwilioVoiceRepository = new TwilioVoiceRepository();
-    private _maxCallCount: number = parseInt(process.env.MAX_CALL_COUNT || "3");
+    private _smsRepository: TwilioSMSRepository = new TwilioSMSRepository();
 
     async add(body: AddAccountDTO) {
         let account = toAccountSchema(body);
@@ -26,8 +25,8 @@ export default class AccountService {
     async call(body: CallCustomerDTO) {
         const account = toAccountSchema(body);
         let accountRecord = await this._accountRepository.getCustomers(account);
-        let isCallConfigured = accountRecord.notificationTypes && NotificationTypeEnum.call;
-        let isSmsConfigured = accountRecord.notificationTypes && NotificationTypeEnum.sms;
+        let isCallConfigured = accountRecord.notificationTypes & NotificationTypeEnum.call;
+        let isSmsConfigured = accountRecord.notificationTypes & NotificationTypeEnum.sms;
         //const limit: number = <number>getEnvValue(EnvVarTypeEnum.CallBatchSize);
         const limit: number = accountRecord.callBatchSize;
         for (let i = 0; (i < accountRecord.customers.length) && (i < limit); i++) {
@@ -40,7 +39,12 @@ export default class AccountService {
                 });
             }
             if (isSmsConfigured) {
-
+                await this._smsRepository.sendSmsToCustomer(<ITwilioSms>{
+                    sid: accountRecord.sid,
+                    authToken: accountRecord.authToken,
+                    from: accountRecord.phoneNumber,
+                    to: getCallingPrefix(accountRecord.customers[i].channel) + accountRecord.customers[i].mobileNo
+                });
             }
             await this._accountRepository.deleteFrontCustomer(accountRecord, i);
         };
