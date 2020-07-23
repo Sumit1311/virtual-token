@@ -7,7 +7,6 @@ export default class WebhooksController {
 
     static async enqueue(req: Request, res: Response) {
         try {
-            console.log(req.query);
             let body: AddCustomerDTO = new AddCustomerDTO({ ...req.query, _channel: req.params.channel });
             let content: any = await WebhooksController.webhooksService.enqueue(body);
             return res.contentType(content.contentType).end(content.response);

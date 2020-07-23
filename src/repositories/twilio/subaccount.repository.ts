@@ -1,11 +1,13 @@
 import TwilioSubAccountHelper from "../../helpers/twilio/SubAccount";
 import ITwilioSubAccount from "../../helpers/twilio/ISubAccount";
 import { IAccount } from "../../database/models/account";
+import { getEnvValue } from "../../helpers/env";
+import { EnvVarTypeEnum } from "../../enums/EnvVarTypeEnum";
 
 export default class TwilioSubAccountRepository {
     private _twilioSubAccountHelper: TwilioSubAccountHelper;
-    private _parentAccountSid: string = process.env.TWILIO_ACCOUNT_SID || "";
-    private _parentAuthKey: string = process.env.TWILIO_AUTH_KEY || "";
+    private _parentAccountSid: string = <string>getEnvValue(EnvVarTypeEnum.TwilioAccountSid);
+    private _parentAuthKey: string = <string>getEnvValue(EnvVarTypeEnum.TwilioAuthKey);
 
     constructor() {
         this._twilioSubAccountHelper = new TwilioSubAccountHelper(<ITwilioSubAccount>{

@@ -8,8 +8,8 @@ export const validateBody = (schema: SchemaLike) => {
         const response = ResponseBuilder.getDefaultResponse();
         const error = joiHelper.validateObjectSchema(req.body, schema);
         if (error) {
-            response.body = error;
-            return res.status(response.status).send(response);
+            response.setBody(error);
+            return res.status(response.getResponse().status).send(response.getResponse());
         }
         return next();
     }
@@ -20,8 +20,8 @@ export const validateQuery = (schema: SchemaLike) => {
         const response = ResponseBuilder.getDefaultResponse();
         const error = joiHelper.validateObjectSchema(req.query, schema);
         if (error) {
-            response.body = error;
-            return res.status(response.status).send(response);
+            response.setBody(error);
+            return res.status(response.getResponse().status).end(response.getResponse());
         }
         return next();
     }

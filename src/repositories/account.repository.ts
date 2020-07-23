@@ -3,27 +3,30 @@ import constants from "../constants";
 
 export default class AccountRepository {
     async addCustomer(accountDoc: IAccount) {
-        let account = await this._getAccountByPhoneNumber(accountDoc);
+        let account = await this._getAccountByMissedCallNumber(accountDoc);
         if (!account) {
             throw new Error();
         }
         account.lastToken ? (account.lastToken)++ : account.lastToken = 1;
         accountDoc.customers[0].token = account.lastToken;
         account.customers.push(accountDoc.customers[0]);
-        return account.save();
+        await account.save();
+        this.sortCustomersByToken(account);
+        this.filterActiveCustomers(account);
+        return account;
     }
 
     async addAccount(accountDoc: IAccount) {
-        let account = await this._getAccountByPhoneNumber(accountDoc);
+        let account = await this._getAccountByMissedCallNumber(accountDoc);
         if (account) {
             throw new Error(constants.PHONE_NUMBER_ALREADY_ADDED);
         } else {
-            return accountDoc.save();
+            return await accountDoc.save();
         }
     }
 
     async findAccountByAccountId(accountDoc: IAccount) {
-        let account = this._getAccountByAccountId(accountDoc)
+        let account = await this._getAccountByAccountId(accountDoc)
         if (account == null) {
             throw new Error();
         } else {
@@ -34,6 +37,13 @@ export default class AccountRepository {
     private async _getAccountByPhoneNumber(account: IAccount, projection: any = null) {
         let accountRecord = await AccountModel.findOne({
             phoneNumber: account.phoneNumber
+        }, projection);
+        return accountRecord;
+    }
+
+    private async _getAccountByMissedCallNumber(account: IAccount, projection: any = null) {
+        let accountRecord = await AccountModel.findOne({
+            missedCallNumber: account.missedCallNumber
         }, projection);
         return accountRecord;
     }
@@ -54,7 +64,7 @@ export default class AccountRepository {
     }
 
     async deleteFrontCustomer(account: IAccount, index: number) {
-        return AccountModel.findOneAndUpdate({
+        return await AccountModel.findOneAndUpdate({
             accountId: account.accountId
         }, {
             $set: {

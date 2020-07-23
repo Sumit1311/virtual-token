@@ -4,6 +4,7 @@ import AddAccountDTO from "../dto/AddAccountDTO";
 import ResponseBuilder from "../helpers/http/ResponseBuilder";
 import HttpStatus from "http-status-codes";
 import CallCustomerDTO from "../dto/CallCustomerDTO";
+import { isHandledError } from "../helpers/error";
 
 export default class AccountController {
     static accountService: AccountService = new AccountService();
@@ -12,31 +13,31 @@ export default class AccountController {
         const response = ResponseBuilder.getDefaultResponse();
         try {
             const body = new AddAccountDTO(req.body);
-            response.body = await AccountController.accountService.add(body);
-            response.status = HttpStatus.CREATED;
-            response.message = HttpStatus.getStatusText(HttpStatus.CREATED);
+            response.setBody(await AccountController.accountService.add(body));
+            response.setStatus(HttpStatus.CREATED);
         } catch (error) {
-            response.status = HttpStatus.INTERNAL_SERVER_ERROR;
-            response.message = HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR);
-            response.body = error;
+            response.setBody({ error: error.message });
+            if (!isHandledError(error.message)) {
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             console.log(error);
         }
-        res.status(response.status).send(response).end();
+        res.status(response.getResponse().status).send(response.getResponse()).end();
     }
-    
+
     static async call(req: Request, res: Response) {
         const response = ResponseBuilder.getDefaultResponse();
         try {
             const body = new CallCustomerDTO(req.query);
-            response.body = await AccountController.accountService.call(body);
-            response.status = HttpStatus.OK;
-            response.message = HttpStatus.getStatusText(HttpStatus.OK);
+            response.setBody(await AccountController.accountService.call(body));
+            response.setStatus(HttpStatus.OK);
         } catch (error) {
-            response.status = HttpStatus.INTERNAL_SERVER_ERROR;
-            response.message = HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR);
-            response.body = error;
+            response.setBody({ error: error.message });
+            if (!isHandledError(error.message)) {
+                response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
             console.log(error);
         }
-        res.status(response.status).send(response).end();
+        res.status(response.getResponse().status).send(response.getResponse()).end();
     }
 }

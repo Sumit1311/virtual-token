@@ -7,6 +7,9 @@ import TwilioVoiceRepository from "../repositories/twilio/voice.repository";
 import ITwilioCall from "../helpers/twilio/ICall";
 import { ChannelTypeEnum } from "../enums/ChannelTypeEnum";
 import { getCallingPrefix } from "../helpers";
+import { NotificationTypeEnum } from "../enums/NotificationTypeEnum";
+import { getEnvValue } from "../helpers/env";
+import { EnvVarTypeEnum } from "../enums/EnvVarTypeEnum";
 
 export default class AccountService {
     private _accountRepository: AccountRepository = new AccountRepository();
@@ -22,17 +25,25 @@ export default class AccountService {
 
     async call(body: CallCustomerDTO) {
         const account = toAccountSchema(body);
-        const { number: limit } = body;
         let accountRecord = await this._accountRepository.getCustomers(account);
+        let isCallConfigured = accountRecord.notificationTypes && NotificationTypeEnum.call;
+        let isSmsConfigured = accountRecord.notificationTypes && NotificationTypeEnum.sms;
+        //const limit: number = <number>getEnvValue(EnvVarTypeEnum.CallBatchSize);
+        const limit: number = accountRecord.callBatchSize;
         for (let i = 0; (i < accountRecord.customers.length) && (i < limit); i++) {
-            await this._voiceRepository.callCustomer(<ITwilioCall>{
-                sid: accountRecord.sid,
-                authToken: accountRecord.authToken,
-                //from: accountRecord.phoneNumber,
-                from: "+17819953842",
-                to: getCallingPrefix(accountRecord.customers[i].channel) + accountRecord.customers[i].mobileNo
-            });
+            if (isCallConfigured) {
+                await this._voiceRepository.callCustomer(<ITwilioCall>{
+                    sid: accountRecord.sid,
+                    authToken: accountRecord.authToken,
+                    from: accountRecord.phoneNumber,
+                    to: getCallingPrefix(accountRecord.customers[i].channel) + accountRecord.customers[i].mobileNo
+                });
+            }
+            if (isSmsConfigured) {
+
+            }
             await this._accountRepository.deleteFrontCustomer(accountRecord, i);
         };
+        return {};
     }
 }

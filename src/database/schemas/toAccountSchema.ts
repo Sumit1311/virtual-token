@@ -29,12 +29,15 @@ function addAccountDTOToAccountSchema(data: AddAccountDTO) {
     account.mobileNo = data.mobileNo;
     account.lastToken = 0;
     account.accountId = getGuid();
+    account.notificationTypes = data.notificationTypes;
+    account.name = data.name;
+    account.missedCallNumber = data.missedCallNumber;
     return account;
 }
 
 function addCustomerDTOToAccountSchema(data: AddCustomerDTO) {
     let account: IAccount = new AccountModel();
-    account.phoneNumber = data.caller;
+    account.missedCallNumber = data.missedCallNumber;
     account.customers.push(<ICustomer>{
         mobileNo: data.mobileNo,
         channel: getChannelType(data.channel)

@@ -1,5 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { ChannelTypeEnum } from '../../enums/ChannelTypeEnum';
+import { NotificationTypeEnum } from '../../enums/NotificationTypeEnum';
+import { number } from 'joi';
 
 export interface ICustomer extends Document {
     _id: string;
@@ -23,6 +25,11 @@ export interface IAccount extends Document {
     mobileNo: string;
     customers: Array<ICustomer>;
     accountId: string;
+    notificationTypes: number;
+    name: string;
+    missedCallNumber: string;
+    callBatchSize: number;
+    perCustomerTime: number;
 }
 
 const CustomerSchema: Schema = new Schema({
@@ -38,6 +45,8 @@ const CustomerSchema: Schema = new Schema({
         default: true
     },
     channel: Number
+}, {
+    timestamps: true
 });
 
 const AccountSchema: Schema = new Schema({
@@ -50,7 +59,23 @@ const AccountSchema: Schema = new Schema({
     password: String,
     mobileNo: String,
     accountId: String,
-    customers: [CustomerSchema]
+    notificationTypes: {
+        default: 0,
+        type: Number
+    },
+    customers: [CustomerSchema],
+    name: String,
+    missedCallNumber: String,
+    callBatchSize: {
+        default: 2,
+        type: Number
+    },
+    perCustomerTime: {
+        default: 300,
+        type: Number
+    }
+}, {
+    timestamps: true
 });
 
 export default mongoose.model<IAccount>('Account', AccountSchema);

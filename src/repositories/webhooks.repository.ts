@@ -5,17 +5,17 @@ import constants from "../constants";
 import MimeTypes from "mime-types";
 
 export default class WebhooksRepository {
-    getEnqueueResponse(data: AddCustomerDTO) {
-        if (data.channel === constants.TWILIO) {
+    getEnqueueResponse({ channel, assignedToken, currentToken, estimatedDuration }: any) {
+        if (channel === constants.TWILIO) {
             let response: ITwilioResponse = TwilioResponseBuilder.getRejectionResponse();
             return {
                 contentType: response.contentType,
                 response: response.content
             }
-        } else if (data.channel === constants.ONERING) {
+        } else if (channel === constants.ONERING) {
             return {
                 contentType: MimeTypes.lookup("text"),
-                response: "You are in the waiting queue. Your token number is 1. You will be notified before 15 mins of your turn."
+                response: `You are in the waiting queue. Token number is ${assignedToken}. Current token being served is ${currentToken}. Estimated duration : ${estimatedDuration} mins`
             }
         } else {
             return {
