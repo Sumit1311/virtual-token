@@ -9,6 +9,7 @@ import { getCallingPrefix } from "../helpers";
 import { NotificationTypeEnum } from "../enums/NotificationTypeEnum";
 import TwilioSMSRepository from "../repositories/twilio/sms.repository";
 import ITwilioSms from "../helpers/twilio/ISms";
+import GetCustomersDTO from "../dto/GetCustomersDTO";
 
 export default class AccountService {
     private _accountRepository: AccountRepository = new AccountRepository();
@@ -49,5 +50,10 @@ export default class AccountService {
             await this._accountRepository.deleteFrontCustomer(accountRecord, i);
         };
         return {};
+    }
+
+    async getCustomers(data: GetCustomersDTO) {
+        let accountRecord = await this._accountRepository.getCustomers(toAccountSchema(data));
+        return accountRecord.customers;
     }
 }

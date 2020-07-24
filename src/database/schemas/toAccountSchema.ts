@@ -5,14 +5,17 @@ import CallCustomerDTO from "../../dto/CallCustomerDTO";
 import { getGuid, getChannelType } from "../../helpers";
 import constants from "../../constants";
 import { ChannelTypeEnum } from "../../enums/ChannelTypeEnum";
+import GetCustomersDTO from "../../dto/GetCustomersDTO";
 
-export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO) {
+export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO | GetCustomersDTO) {
     if (data instanceof AddAccountDTO) {
         return addAccountDTOToAccountSchema(<AddAccountDTO>data);
     } else if (data instanceof AddCustomerDTO) {
         return addCustomerDTOToAccountSchema(<AddCustomerDTO>data);
     } else if (data instanceof CallCustomerDTO) {
         return callCustomerDTOToAccountSchema(<CallCustomerDTO>data);
+    } else if (data instanceof GetCustomersDTO) {
+        return getCustomersDTOToAccountSchema(<GetCustomersDTO>data);
     }
     else {
         throw new Error();
@@ -46,6 +49,12 @@ function addCustomerDTOToAccountSchema(data: AddCustomerDTO) {
 }
 
 function callCustomerDTOToAccountSchema(data: CallCustomerDTO) {
+    let account: IAccount = new AccountModel();
+    account.accountId = data.accountId;
+    return account;
+}
+
+function getCustomersDTOToAccountSchema(data: GetCustomersDTO) {
     let account: IAccount = new AccountModel();
     account.accountId = data.accountId;
     return account;

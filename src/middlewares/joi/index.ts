@@ -20,9 +20,10 @@ export const validateQuery = (schema: SchemaLike) => {
         const response = ResponseBuilder.getDefaultResponse();
         const error = joiHelper.validateObjectSchema(req.query, schema);
         if (error) {
-            response.setBody(error);
-            return res.status(response.getResponse().status).end(response.getResponse());
+            response.setBody(error[0]);
+            return res.status(response.getResponse().status).send(response.getResponse()).end();
         }
+        console.log("Call next");
         return next();
     }
 };

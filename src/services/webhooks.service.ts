@@ -20,6 +20,11 @@ export default class WebhooksService {
         const currentToken = accountRecord.customers[0].token;
         //const estimatedDuration = (assignedToken - currentToken) * (<number>getEnvValue(EnvVarTypeEnum.IntervalBetweenCustomer) / 60);
         const estimatedDuration = (assignedToken - currentToken) * (accountRecord.perCustomerTime / 60);
+        /*if (accountRecord.notificationTypes & NotificationTypeEnum.none) {
+            setTimeout(async () => {
+                await this._accountRepository.deleteFrontCustomer(accountRecord, accountRecord.customers.length - 1);
+            }, (estimatedDuration + 1) * 60000);
+        }*/
         return this._webhooksRepository.getEnqueueResponse({
             channel: body.channel,
             assignedToken,

@@ -13,3 +13,7 @@ export const create = Joi.object({
 export const callCustomers = Joi.object({
     accountId: Joi.string().required()
 });
+
+export const getCustomers = Joi.object({
+    accountId: Joi.string().required()
+});
