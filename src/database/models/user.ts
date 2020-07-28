@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { UserRoleTypeEnum } from '../../enums/UserRoleTypeEnum';
 
 export interface IUserRole extends Document {
-    role:UserRoleTypeEnum
+    role: UserRoleTypeEnum
 }
 
 export interface IUser extends Document {
@@ -11,8 +11,18 @@ export interface IUser extends Document {
     password: string;
     mobileNo: string;
     accountId: string;
-    roles:Array<IUserRole>;
+    roles: Array<IUserRole>;
 }
+
+export interface IUserRole extends Document {
+    role: UserRoleTypeEnum
+}
+
+const UserRoleSchema: Schema = new Schema({
+    role: Number
+}, {
+    timestamps: true
+})
 
 const UserSchema: Schema = new Schema({
     userName: String,
@@ -20,7 +30,9 @@ const UserSchema: Schema = new Schema({
     password: String,
     mobileNo: String,
     accountId: String,
-    roles:[]
+    roles: [UserRoleSchema]
+}, {
+    timestamps: true
 });
 
 export default mongoose.model<IUser>('User', UserSchema);
