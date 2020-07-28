@@ -11,7 +11,8 @@ export default class WebhooksController {
             let content: any = await WebhooksController.webhooksService.enqueue(body);
             return res.contentType(content.contentType).end(content.response);
         } catch (error) {
-            res.status(500).end("Internal Server Error");
+            console.log(error);
+            res.status(500).end(error.message);
         };
     }
 

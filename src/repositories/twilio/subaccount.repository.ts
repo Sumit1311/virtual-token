@@ -16,7 +16,7 @@ export default class TwilioSubAccountRepository {
         });
     }
     async add(account: IAccount) {
-        let result = await this._twilioSubAccountHelper.create(account.phoneNumber);
+        let result = await this._twilioSubAccountHelper.create(account.callingNumber);
         //account.sid = result.sid;
         //account.authToken = result.authToken;
         account.sid = this._parentAccountSid;

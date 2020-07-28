@@ -1,10 +1,8 @@
-import AccountModel, { IAccount, ICustomer } from "../models/account";
+import AccountModel, { IAccount } from "../models/account";
 import AddCustomerDTO from "../../dto/AddCustomerDTO";
 import AddAccountDTO from "../../dto/AddAccountDTO";
 import CallCustomerDTO from "../../dto/CallCustomerDTO";
-import { getGuid, getChannelType } from "../../helpers";
-import constants from "../../constants";
-import { ChannelTypeEnum } from "../../enums/ChannelTypeEnum";
+import { getGuid } from "../../helpers";
 import GetCustomersDTO from "../../dto/GetCustomersDTO";
 
 export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO | GetCustomersDTO) {
@@ -24,7 +22,7 @@ export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | C
 
 function addAccountDTOToAccountSchema(data: AddAccountDTO) {
     let account: IAccount = new AccountModel();
-    account.phoneNumber = data.phoneNumber;
+    account.callingNumber = data.phoneNumber;
     account.sid = data.sid;
     account.authToken = data.authToken;
     account.parentSid = data.sid;
@@ -41,10 +39,6 @@ function addAccountDTOToAccountSchema(data: AddAccountDTO) {
 function addCustomerDTOToAccountSchema(data: AddCustomerDTO) {
     let account: IAccount = new AccountModel();
     account.missedCallNumber = data.missedCallNumber;
-    account.customers.push(<ICustomer>{
-        mobileNo: data.mobileNo,
-        channel: getChannelType(data.channel)
-    })
     return account;
 }
 
