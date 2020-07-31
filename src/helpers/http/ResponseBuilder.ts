@@ -1,6 +1,6 @@
 import HttpStatus from "http-status-codes";
 
-class APIResponse {
+export class APIResponse {
     private status: number = HttpStatus.BAD_REQUEST;
     private message: string = HttpStatus.getStatusText(HttpStatus.BAD_REQUEST);
     private body: any = {};

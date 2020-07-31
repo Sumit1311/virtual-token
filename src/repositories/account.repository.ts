@@ -20,12 +20,31 @@ export default class AccountRepository {
         }
     }
 
+    async signup(accountDoc: IAccount) {
+        let account = await this._getAccountByName(accountDoc);
+        if (account) {
+            throw new Error(constants.ORGANISATION_NAME_EXISTS);
+        } else {
+            return await accountDoc.save();
+        }
+    }
+
     async findAccountByAccountId(accountDoc: IAccount) {
         let account = await this._getAccountByAccountId(accountDoc)
         if (account == null) {
             throw new Error(constants.INVALID_ACCOUNT_ID);
         } else {
             return account;
+        }
+    }
+
+    async updateMissedCallNumber(accountDoc: IAccount) {
+        let account = await this._getAccountByAccountId(accountDoc)
+        if (account == null) {
+            throw new Error(constants.INVALID_ACCOUNT_ID);
+        } else {
+            account.missedCallNumber = accountDoc.missedCallNumber;
+            return await account.save();
         }
     }
 
@@ -38,6 +57,12 @@ export default class AccountRepository {
         }
     }
 
+    private async _getAccountByName(account: IAccount, projection: any = null) {
+        let accountRecord = await AccountModel.findOne({
+            name: account.name
+        }, projection);
+        return accountRecord;
+    }
 
     private async _getAccountByMissedCallNumber(account: IAccount, projection: any = null) {
         let accountRecord = await AccountModel.findOne({

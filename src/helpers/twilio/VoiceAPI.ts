@@ -5,6 +5,7 @@ export default class TwilioVoiceAPIHelper {
     constructor() {
     }
     async call(callData: ITwilioCall) {
+        console.log(callData);
         const callResponse = await (new TwilioClient(callData.sid, callData.authToken)).calls.create({
             twiml: callData.twiml,
             to: callData.to,

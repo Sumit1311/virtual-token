@@ -1,15 +1,39 @@
 import AccountRepository from "../repositories/account.repository";
+import UserRepository from "../repositories/user.repository";
 import AddAccountDTO from "../dto/AddAccountDTO";
 import toAccountSchema from "../database/schemas/toAccountSchema";
 import TwilioSubAccountRepository from "../repositories/twilio/subaccount.repository";
+import SignupDTO from "../dto/SignupDTO";
+import toUserSchema from "../database/schemas/toUserSchema";
+import UpdateMissedCallNumberDTO from "../dto/UpdateMissedCallNumberDTO";
+import GetAccountDTO from "../dto/GetAccountDTO";
 
 export default class AccountService {
     private _accountRepository: AccountRepository = new AccountRepository();
+    private _userRepository: UserRepository = new UserRepository();
     private _subAccountRepository: TwilioSubAccountRepository = new TwilioSubAccountRepository();
 
     async add(body: AddAccountDTO) {
         let account = toAccountSchema(body);
         //account = await this._subAccountRepository.add(account);
         return this._accountRepository.addAccount(account);
+    }
+
+    async signup(body: SignupDTO) {
+        let account = await this._accountRepository.signup(toAccountSchema(body));
+        let user = await toUserSchema(body);
+        user.accountId = account.accountId;
+        console.log(user);
+        return await this._userRepository.add(user);
+    }
+
+    async updateMissedCallNumber(body: UpdateMissedCallNumberDTO) {
+        let account = await this._accountRepository.updateMissedCallNumber(toAccountSchema(body));
+        return account;
+    }
+
+    async getAccount(body: GetAccountDTO) {
+        let account = await this._accountRepository.findAccountByAccountId(toAccountSchema(body))
+        return account;
     }
 }

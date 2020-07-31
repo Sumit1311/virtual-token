@@ -1,7 +1,9 @@
+import IValidatedRequest from "../helpers/jwt/IValidatedRequest";
+
 export default class GetCustomersDTO {
     accountId: string = "";
 
-    constructor(data: any) {
-        this.accountId = data.accountId;
+    constructor(req: IValidatedRequest) {
+        this.accountId = req.user.accountId;
     }
 }
