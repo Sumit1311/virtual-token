@@ -20,10 +20,10 @@ export default class AccountService {
     }
 
     async signup(body: SignupDTO) {
-        let account = await this._accountRepository.signup(toAccountSchema(body));
         let user = await toUserSchema(body);
+        await this._userRepository.checkUsername(user);
+        let account = await this._accountRepository.signup(toAccountSchema(body));
         user.accountId = account.accountId;
-        console.log(user);
         return await this._userRepository.add(user);
     }
 

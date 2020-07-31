@@ -3,7 +3,7 @@ import constants from "../constants";
 
 export default class UserRepository {
     async add(user: IUser) {
-        let userRecord = await this.checkIfUserAlreadyExists(user);
+        let userRecord = await this.checkIfUserAlreadyExistsByUserName(user);
         if (userRecord === null) {
             return await user.save();
         } else {
@@ -26,6 +26,13 @@ export default class UserRepository {
             throw new Error(constants.USER_NOT_FOUND);
         } else {
             return userRecord;
+        }
+    }
+
+    async checkUsername(user: IUser) {
+        let userRecord = await this.checkIfUserAlreadyExistsByUserName(user);
+        if (userRecord) {
+            throw new Error(constants.USER_ALREADY_EXISTS);
         }
     }
 
