@@ -2,7 +2,7 @@ import constants from "../../constants"
 import ResponseBuilder, { APIResponse } from "../http/ResponseBuilder";
 import HttpStatus from "http-status-codes";
 
-export function isHandledError(message: string) {
+export function handleError(message: string) {
     let response: null | APIResponse = ResponseBuilder.getDefaultResponse();
     response.setBody({ error: message });
     switch (message) {
@@ -17,7 +17,7 @@ export function isHandledError(message: string) {
         case constants.TOKEN_MISSING:
             response.setStatus(HttpStatus.UNAUTHORIZED);
         default:
-            response = null;
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return response;
 }

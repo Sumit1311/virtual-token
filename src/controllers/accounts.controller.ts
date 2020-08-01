@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import AddAccountDTO from "../dto/AddAccountDTO";
 import ResponseBuilder, { APIResponse } from "../helpers/http/ResponseBuilder";
 import HttpStatus from "http-status-codes";
-import { isHandledError } from "../helpers/error";
+import { handleError } from "../helpers/error";
 import SignupDTO from "../dto/SignupDTO";
 import IValidatedRequest from "../helpers/jwt/IValidatedRequest";
 import UpdateMissedCallNumberDTO from "../dto/UpdateMissedCallNumberDTO";
@@ -19,7 +19,8 @@ export default class AccountController {
             response.setBody(await AccountController.accountService.add(body));
             response.setStatus(HttpStatus.CREATED);
         } catch (error) {
-            catchError(response, error);
+            response = handleError(error.message);
+            console.log(error);
         }
         res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
@@ -31,7 +32,8 @@ export default class AccountController {
             response.setBody(await AccountController.accountService.signup(body));
             response.setStatus(HttpStatus.CREATED);
         } catch (error) {
-            catchError(response, error);
+            response = handleError(error.message);
+            console.log(error);
         }
         res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
@@ -44,7 +46,8 @@ export default class AccountController {
             response.setBody(await AccountController.accountService.updateMissedCallNumber(body));
             response.setStatus(HttpStatus.OK);
         } catch (error) {
-            catchError(response, error);
+            response = handleError(error.message);
+            console.log(error);
         }
         res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
@@ -57,20 +60,9 @@ export default class AccountController {
             response.setBody(await AccountController.accountService.getAccount(body));
             response.setStatus(HttpStatus.OK);
         } catch (error) {
-            catchError(response, error);
+            response = handleError(error.message);
+            console.log(error);
         }
         res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
-}
-
-function catchError(response: APIResponse, error: Error) {
-    const errorResponse = isHandledError(error.message)
-
-    if (errorResponse === null) {
-        response.setBody({ error: error.message });
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-    } else {
-        response = errorResponse;
-    }
-    console.log(error);
 }
