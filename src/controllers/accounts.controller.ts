@@ -21,7 +21,7 @@ export default class AccountController {
         } catch (error) {
             catchError(response, error);
         }
-        res.status(response.getResponse().status).send(response.getResponse()).end();
+        res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
 
     static async signup(req: Request, res: Response) {
@@ -33,7 +33,7 @@ export default class AccountController {
         } catch (error) {
             catchError(response, error);
         }
-        res.status(response.getResponse().status).send(response.getResponse()).end();
+        res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
 
     static async updateMissedCallNumber(req: Request, res: Response) {
@@ -46,7 +46,7 @@ export default class AccountController {
         } catch (error) {
             catchError(response, error);
         }
-        res.status(response.getResponse().status).send(response.getResponse()).end();
+        res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
 
     static async getAccount(req: Request, res: Response) {
@@ -59,7 +59,7 @@ export default class AccountController {
         } catch (error) {
             catchError(response, error);
         }
-        res.status(response.getResponse().status).send(response.getResponse()).end();
+        res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
 }
 
