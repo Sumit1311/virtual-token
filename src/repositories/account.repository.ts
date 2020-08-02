@@ -3,12 +3,8 @@ import constants from "../constants";
 
 export default class AccountRepository {
     async incrementLastToken(accountDoc: IAccount) {
-        let account = await this._getAccountByMissedCallNumber(accountDoc);
-        if (!account) {
-            throw new Error();
-        }
-        account.lastToken ? (account.lastToken)++ : account.lastToken = 1;
-        return await account.save();
+        //account.lastToken ? (account.lastToken)++ : account.lastToken = 1;
+        return await accountDoc.save();
     }
 
     async addAccount(accountDoc: IAccount) {

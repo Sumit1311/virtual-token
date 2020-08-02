@@ -1,4 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { MomentObjectOutput, FromTo } from 'moment';
+
+export interface ICurrentSlot {
+    date: number;
+    startToken: number;
+}
 
 export interface IAccount extends Document {
     _id: string;
@@ -14,8 +20,10 @@ export interface IAccount extends Document {
     notificationTypes: number;
     name: string;
     missedCallNumber: string;
-    callBatchSize: number;
-    perCustomerTime: number;
+    dailyTiming: FromTo;
+    slotDuration: MomentObjectOutput;
+    customersPerSlot: number;
+    currentSlot: ICurrentSlot;
 }
 
 const AccountSchema: Schema = new Schema({
@@ -39,10 +47,30 @@ const AccountSchema: Schema = new Schema({
         default: 2,
         type: Number
     },
-    perCustomerTime: {
-        default: 300,
-        type: Number
-    }
+    dailyTiming: {
+        type: Object,
+        default: {
+            from: {
+                hours: 9,
+                minutes: 0
+            },
+            to: {
+                hours: 21,
+                minutes: 0
+            }
+        }
+    },
+    slotDuration: {
+        type: Object,
+        default: {
+            minutes: 60
+        }
+    },
+    customersPerSlot: {
+        type: Number,
+        default: 20
+    },
+    currentSlot: Object
 }, {
     timestamps: true
 });

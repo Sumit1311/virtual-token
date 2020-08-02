@@ -23,7 +23,7 @@ export default class CustomerService {
         let isCallConfigured = accountRecord.notificationTypes & NotificationTypeEnum.call;
         let isSmsConfigured = accountRecord.notificationTypes & NotificationTypeEnum.sms;
         //const limit: number = <number>getEnvValue(EnvVarTypeEnum.CallBatchSize);
-        const limit: number = accountRecord.callBatchSize;
+        const limit: number = 2;
         for (let i = 0; (i < queue.length) && (i < limit); i++) {
             if (isCallConfigured) {
                 await this._voiceRepository.callCustomer(<ITwilioCall>{

@@ -6,6 +6,7 @@ import QueueModel, { IQueue } from "../models/queue";
 import { getGuid, getChannelType } from "../../helpers";
 import CallCustomerDTO from "../../dto/CallCustomerDTO";
 import GetCustomersDTO from "../../dto/GetCustomersDTO";
+import { FromTo } from "moment";
 
 export default function toQueueSchema(data: AddCustomerDTO | CallCustomerDTO | GetCustomersDTO) {
     if (data instanceof AddCustomerDTO) {
@@ -25,6 +26,7 @@ function addCustomerDTOToQueueSchema(data: AddCustomerDTO) {
     queue.mobileNo = data.mobileNo;
     queue.channel = getChannelType(data.channel);
     queue.active = true;
+    queue.allotedSlot = <FromTo>{};
     return queue;
 }
 

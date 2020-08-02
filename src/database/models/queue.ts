@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { ChannelTypeEnum } from "../../enums/ChannelTypeEnum";
+import { FromTo } from "moment";
 
 export interface IQueue extends Document {
     _id: string;
@@ -10,6 +11,7 @@ export interface IQueue extends Document {
     active: boolean;
     channel: ChannelTypeEnum;
     accountId: string;
+    allotedSlot:FromTo;
 };
 
 const QueueSchema: Schema = new Schema({
@@ -25,7 +27,8 @@ const QueueSchema: Schema = new Schema({
         type: Boolean,
         default: true
     },
-    channel: Number
+    channel: Number,
+    allotedSlot:Object
 }, {
     timestamps: true
 });
