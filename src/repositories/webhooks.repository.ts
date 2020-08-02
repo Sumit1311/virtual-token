@@ -13,8 +13,8 @@ export default class WebhooksRepository {
                 response: response.content
             }
         } else if (channel === constants.ONERING) {
-            let from = moment(allotedSlot.from).format("hh:mm a");
-            let to = moment(allotedSlot.to).format("hh:mm a");
+            let from = moment(allotedSlot.from).utc().utcOffset("+05:30").format("hh:mm a");
+            let to = moment(allotedSlot.to).utc().utcOffset("+05:30").format("hh:mm a");
             return {
                 contentType: MimeTypes.lookup("text"),
                 response: `Your token number is ${assignedToken}. Slot alloted to visit hospital ${from} to ${to}.`
