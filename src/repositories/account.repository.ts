@@ -34,12 +34,20 @@ export default class AccountRepository {
         }
     }
 
-    async updateMissedCallNumber(accountDoc: IAccount) {
+    async update(accountDoc: IAccount) {
         let account = await this._getAccountByAccountId(accountDoc)
         if (account == null) {
             throw new Error(constants.INVALID_ACCOUNT_ID);
         } else {
-            account.missedCallNumber = accountDoc.missedCallNumber;
+            if (accountDoc.dailyTiming) {
+                account.dailyTiming = accountDoc.dailyTiming;
+            }
+            if (accountDoc.slotDuration) {
+                account.slotDuration = accountDoc.slotDuration;
+            }
+            if (accountDoc.customersPerSlot) {
+                account.customersPerSlot = accountDoc.customersPerSlot;
+            }
             return await account.save();
         }
     }

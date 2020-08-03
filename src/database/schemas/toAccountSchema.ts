@@ -7,11 +7,12 @@ import GetCustomersDTO from "../../dto/GetCustomersDTO";
 import SignupDTO from "../../dto/SignupDTO";
 import { getEnvValue } from "../../helpers/env";
 import { EnvVarTypeEnum } from "../../enums/EnvVarTypeEnum";
-import UpdateMissedCallNumberDTO from "../../dto/UpdateMissedCallNumberDTO";
+import UpdateAccountDTO from "../../dto/UpdateAccountDTO";
 import { func } from "joi";
 import GetAccountDTO from "../../dto/GetAccountDTO";
+import { MomentInputObject, MomentObjectOutput } from "moment";
 
-export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO | GetCustomersDTO | SignupDTO | UpdateMissedCallNumberDTO | GetAccountDTO) {
+export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO | GetCustomersDTO | SignupDTO | UpdateAccountDTO | GetAccountDTO) {
     if (data instanceof AddAccountDTO) {
         return addAccountDTOToAccountSchema(<AddAccountDTO>data);
     } else if (data instanceof AddCustomerDTO) {
@@ -22,8 +23,8 @@ export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | C
         return getCustomersDTOToAccountSchema(<GetCustomersDTO>data);
     } else if (data instanceof SignupDTO) {
         return signupDTOToAccountSchema(data);
-    } else if (data instanceof UpdateMissedCallNumberDTO) {
-        return updateMissedCallNumberDTOToAccountSchema(data);
+    } else if (data instanceof UpdateAccountDTO) {
+        return updateAccountDTOToAccountSchema(data);
     } else if (data instanceof GetAccountDTO) {
         return getAccountDTOToAccountSchema(data);
     }
@@ -78,10 +79,12 @@ function signupDTOToAccountSchema(data: SignupDTO) {
     return account;
 }
 
-function updateMissedCallNumberDTOToAccountSchema(data: UpdateMissedCallNumberDTO) {
+function updateAccountDTOToAccountSchema(data: UpdateAccountDTO) {
     let account: IAccount = new AccountModel();
     account.accountId = data.accountId;
-    account.missedCallNumber = data.missedCallNumber;
+    account.dailyTiming = data.dailyTiming;
+    account.slotDuration = <MomentObjectOutput>data.slotDuration;
+    account.customersPerSlot = data.customersPerSlot;
     return account;
 }
 

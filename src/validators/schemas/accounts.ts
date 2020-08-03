@@ -17,5 +17,18 @@ export const signup = Joi.object({
 });
 
 export const update = Joi.object({
-    missedCallNumber: Joi.string().required()
+    dailyTiming: Joi.object({
+        from: Joi.object({
+            hours: Joi.number().required(),
+            minutes: Joi.number().required()
+        }),
+        to: Joi.object({
+            hours: Joi.number().required(),
+            minutes: Joi.number().required()
+        })
+    }),
+    slotDuration: Joi.object({
+        minutes: Joi.number().required()
+    }),
+    customersPerSlot: Joi.number().required()
 });

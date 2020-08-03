@@ -5,7 +5,7 @@ import toAccountSchema from "../database/schemas/toAccountSchema";
 import TwilioSubAccountRepository from "../repositories/twilio/subaccount.repository";
 import SignupDTO from "../dto/SignupDTO";
 import toUserSchema from "../database/schemas/toUserSchema";
-import UpdateMissedCallNumberDTO from "../dto/UpdateMissedCallNumberDTO";
+import UpdateAccountDTO from "../dto/UpdateAccountDTO";
 import GetAccountDTO from "../dto/GetAccountDTO";
 
 export default class AccountService {
@@ -27,8 +27,8 @@ export default class AccountService {
         return await this._userRepository.add(user);
     }
 
-    async updateMissedCallNumber(body: UpdateMissedCallNumberDTO) {
-        let account = await this._accountRepository.updateMissedCallNumber(toAccountSchema(body));
+    async update(body: UpdateAccountDTO) {
+        let account = await this._accountRepository.update(toAccountSchema(body));
         return account;
     }
 

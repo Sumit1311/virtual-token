@@ -6,7 +6,7 @@ import HttpStatus from "http-status-codes";
 import { handleError } from "../helpers/error";
 import SignupDTO from "../dto/SignupDTO";
 import IValidatedRequest from "../helpers/jwt/IValidatedRequest";
-import UpdateMissedCallNumberDTO from "../dto/UpdateMissedCallNumberDTO";
+import UpdateAccountDTO from "../dto/UpdateAccountDTO";
 import GetAccountDTO from "../dto/GetAccountDTO";
 
 export default class AccountController {
@@ -38,12 +38,12 @@ export default class AccountController {
         res.status(HttpStatus.OK).send(response.getResponse()).end();
     }
 
-    static async updateMissedCallNumber(req: Request, res: Response) {
+    static async update(req: Request, res: Response) {
         let response = ResponseBuilder.getDefaultResponse();
         let validatedReq = <IValidatedRequest>req;
         try {
-            const body = new UpdateMissedCallNumberDTO(validatedReq, req.body);
-            response.setBody(await AccountController.accountService.updateMissedCallNumber(body));
+            const body = new UpdateAccountDTO(validatedReq, req.body);
+            response.setBody(await AccountController.accountService.update(body));
             response.setStatus(HttpStatus.OK);
         } catch (error) {
             response = handleError(error.message);
