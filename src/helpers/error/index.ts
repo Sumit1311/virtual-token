@@ -15,6 +15,7 @@ export function handleError(message: string) {
             response.setStatus(HttpStatus.BAD_REQUEST);
             break;
         case constants.TOKEN_MISSING:
+        case constants.JWT_EXPIRED:
             response.setStatus(HttpStatus.UNAUTHORIZED);
         default:
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);

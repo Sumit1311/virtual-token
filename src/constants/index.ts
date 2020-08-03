@@ -10,5 +10,6 @@ export default {
     INVALID_PASSWORD: "Invalid password provided",
     NO_CUSTOMER_IN_QUEUE: "Queue Empty",
     ENV_VAR_NOT_FOUND: "Enviroment variable not defined",
-    TOKEN_MISSING: "Token missing"
+    TOKEN_MISSING: "Token missing",
+    JWT_EXPIRED:"jwt expired"
 }
