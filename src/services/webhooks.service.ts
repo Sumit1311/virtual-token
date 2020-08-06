@@ -49,15 +49,11 @@ export default class WebhooksService {
 function getCurrentSlot(account: IAccount) {
     let currentDate = moment().utc().startOf('day').valueOf();
     if (account.currentDate !== currentDate) {
-        let slot = 1;
         account.currentDate = currentDate;
         account.lastToken = 1;
         account.slotCount.splice(0, account.slotCount.length);
-        account.slotCount.set(slot - 1, 1);
-        return slot;
-    } else {
-        return calculateAssignedSlot(account);
     }
+    return calculateAssignedSlot(account);
 }
 
 function calculateAssignedSlot(account: IAccount) {
@@ -75,7 +71,7 @@ function calculateAssignedSlot(account: IAccount) {
         if (account.slotCount[activeSlot - 1] === undefined) {
             account.slotCount[activeSlot - 1] = 0;
         }
-        account.slotCount.set(activeSlot - 1, <number>(account.slotCount[activeSlot - 1]) + 1);
+        account.slotCount.set(activeSlot - 1, <number>(account.slotCount[activeSlot - 1] ? account.slotCount[activeSlot - 1] : 0) + 1);
 
         return activeSlot;
     }
