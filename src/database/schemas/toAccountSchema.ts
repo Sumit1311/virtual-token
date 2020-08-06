@@ -10,7 +10,9 @@ import { EnvVarTypeEnum } from "../../enums/EnvVarTypeEnum";
 import UpdateAccountDTO from "../../dto/UpdateAccountDTO";
 import { func } from "joi";
 import GetAccountDTO from "../../dto/GetAccountDTO";
-import { MomentInputObject, MomentObjectOutput } from "moment";
+import moment, { MomentInputObject, MomentObjectOutput } from "moment";
+import DateTimeHelper from "../../helpers/datetime";
+import mongoose, { Mongoose } from "mongoose";
 
 export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO | GetCustomersDTO | SignupDTO | UpdateAccountDTO | GetAccountDTO) {
     if (data instanceof AddAccountDTO) {
@@ -46,7 +48,10 @@ function addAccountDTOToAccountSchema(data: AddAccountDTO) {
     account.notificationTypes = data.notificationTypes;
     account.name = data.name;
     account.missedCallNumber = data.missedCallNumber;
+
     return account;
+
+
 }
 
 function addCustomerDTOToAccountSchema(data: AddCustomerDTO) {
@@ -68,7 +73,9 @@ function getCustomersDTOToAccountSchema(data: GetCustomersDTO) {
 }
 
 function signupDTOToAccountSchema(data: SignupDTO) {
-    let account: IAccount = new AccountModel();
+    let account: IAccount = new AccountModel({
+        slotCount: []
+    });
     account.name = data.orgName;
     account.accountId = getGuid();
     account.sid = <string>getEnvValue(EnvVarTypeEnum.TwilioAccountSid);
@@ -76,6 +83,22 @@ function signupDTOToAccountSchema(data: SignupDTO) {
     account.parentSid = <string>getEnvValue(EnvVarTypeEnum.TwilioAccountSid)
     account.parentAuthToken = <string>getEnvValue(EnvVarTypeEnum.TwilioAuthKey);
     account.callingNumber = <string>getEnvValue(EnvVarTypeEnum.TwilioPhoneNumber);
+    account.currentDate = DateTimeHelper.getStartOfDayMillis();
+    account.lastToken = 0;
+    account.customersPerSlot = 20;
+    account.slotDuration = {
+        minutes: 60
+    } as MomentObjectOutput;
+    account.dailyTiming = {
+        from: {
+            hours: 9,
+            minutes: 0
+        },
+        to: {
+            hours: 21,
+            minutes: 0
+        }
+    };
     return account;
 }
 

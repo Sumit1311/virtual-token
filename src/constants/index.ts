@@ -11,5 +11,6 @@ export default {
     NO_CUSTOMER_IN_QUEUE: "Queue Empty",
     ENV_VAR_NOT_FOUND: "Enviroment variable not defined",
     TOKEN_MISSING: "Token missing",
-    JWT_EXPIRED:"jwt expired"
+    JWT_EXPIRED:"jwt expired",
+    SLOT_FULL:"Today's slots are full please try booking your slot tomorrow."
 }

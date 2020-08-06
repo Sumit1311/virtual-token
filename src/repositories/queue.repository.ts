@@ -1,4 +1,5 @@
 import QueueModel, { IQueue } from "../database/models/queue";
+import moment from "moment";
 
 export default class QueueRepository {
     async addToQueue(queue: IQueue) {
@@ -12,8 +13,9 @@ export default class QueueRepository {
 
     async getQueue(queue: IQueue) {
         queue.active = true;
+
         return await this.find(queue, null, {
-            sort: { token: 1 }
+            sort: { "allotedSlot.from": 1, token: 1 }
         });
     }
 
@@ -22,7 +24,8 @@ export default class QueueRepository {
             accountId: queue.accountId,
             active: true
         }, null).sort({
-            token: 1
+            token: 1,
+            "allotedSlot.from": 1
         }).exec();
         return record;
     }
@@ -35,7 +38,8 @@ export default class QueueRepository {
     private async find(queue: IQueue, projection: any = null, options: any = null) {
         return await QueueModel.find({
             accountId: queue.accountId,
-            active: queue.active
+            active: queue.active,
+            "allotedSlot.from": { $gte: moment().utc().startOf("day").valueOf() }
         }, projection, options)
     }
 
@@ -43,7 +47,17 @@ export default class QueueRepository {
         return await QueueModel.findOne({
             accountId: queue.accountId,
             mobileNo: queue.mobileNo,
-            active: true
+            active: true,
+            $and: [
+                {
+                    "allotedSlot.from": {
+                        $gte: moment().utc().startOf("day").valueOf()
+                    }
+                }, {
+                    "allotedSlot.to": {
+                        $lte: moment().utc().endOf("day").valueOf()
+                    }
+                }]
         });
     }
 }

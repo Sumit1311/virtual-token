@@ -1,10 +1,5 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Mongoose } from 'mongoose';
 import { MomentObjectOutput, FromTo } from 'moment';
-
-export interface ICurrentSlot {
-    date: number;
-    startToken: number;
-}
 
 export interface IAccount extends Document {
     _id: string;
@@ -23,7 +18,8 @@ export interface IAccount extends Document {
     dailyTiming: FromTo;
     slotDuration: MomentObjectOutput;
     customersPerSlot: number;
-    currentSlot: ICurrentSlot;
+    currentDate: number;
+    slotCount: mongoose.Types.Array<number>;
 }
 
 const AccountSchema: Schema = new Schema({
@@ -48,29 +44,16 @@ const AccountSchema: Schema = new Schema({
         type: Number
     },
     dailyTiming: {
-        type: Object,
-        default: {
-            from: {
-                hours: 9,
-                minutes: 0
-            },
-            to: {
-                hours: 21,
-                minutes: 0
-            }
-        }
+        type: Object
     },
     slotDuration: {
         type: Object,
-        default: {
-            minutes: 60
-        }
     },
     customersPerSlot: {
-        type: Number,
-        default: 20
+        type: Number
     },
-    currentSlot: Object
+    currentDate: Number,
+    slotCount: [Number]
 }, {
     timestamps: true
 });

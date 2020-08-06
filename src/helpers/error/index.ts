@@ -12,6 +12,7 @@ export function handleError(message: string) {
         case constants.USER_ALREADY_EXISTS:
         case constants.PHONE_NUMBER_ALREADY_ADDED:
         case constants.INVALID_ACCOUNT_ID:
+        case constants.SLOT_FULL:
             response.setStatus(HttpStatus.BAD_REQUEST);
             break;
         case constants.TOKEN_MISSING:

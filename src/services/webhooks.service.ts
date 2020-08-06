@@ -4,8 +4,9 @@ import AccountRepository from "../repositories/account.repository";
 import toAccountSchema from "../database/schemas/toAccountSchema";
 import QueueRepository from "../repositories/queue.repository";
 import toQueueSchema from "../database/schemas/toQueueSchema";
-import moment, { Moment, MomentInputObject } from "moment";
-import { IAccount, ICurrentSlot } from "../database/models/account";
+import moment, { MomentInputObject } from "moment";
+import { IAccount } from "../database/models/account";
+import constants from "../constants";
 
 export default class WebhooksService {
     private _webhooksRepository: WebhooksRepository = new WebhooksRepository();
@@ -22,8 +23,12 @@ export default class WebhooksService {
         const queueRecord = toQueueSchema(body);
         queueRecord.accountId = accountRecord.accountId;
         accountRecord.lastToken++;
+        let slot = getCurrentSlot(accountRecord);
+        if (slot === -1) {
+            throw new Error(constants.SLOT_FULL);
+        }
         queueRecord.token = accountRecord.lastToken;
-        let allotedSlot = currentSlotToMoment(accountRecord, getCurrentSlot(accountRecord));
+        let allotedSlot = currentSlotToMoment(accountRecord, slot);
         queueRecord.allotedSlot.from = allotedSlot.from;
         queueRecord.allotedSlot.to = allotedSlot.to;
         const queue = await this._queueRepository.addToQueue(queueRecord);
@@ -42,42 +47,85 @@ export default class WebhooksService {
 }
 
 function getCurrentSlot(account: IAccount) {
-    if (account.currentSlot === null || account.currentSlot === undefined) {
-        account.currentSlot = getCurrentSlotAtStart(account);
-        return 1;
+    let currentDate = moment().utc().startOf('day').valueOf();
+    if (account.currentDate !== currentDate) {
+        let slot = 1;
+        account.currentDate = currentDate;
+        account.lastToken = 1;
+        account.slotCount.splice(0, account.slotCount.length);
+        account.slotCount.set(slot - 1, 1);
+        return slot;
     } else {
-        let currentSlot = account.currentSlot;
-        let dateMoment = moment(currentSlot.date);
-        if (dateMoment.get("date") === moment().utc().get("date")) {
-            let numberOfTokensAssignedToday = ((account.lastToken) - currentSlot.startToken);
-            let slot = Math.ceil(numberOfTokensAssignedToday / account.customersPerSlot);
-            (numberOfTokensAssignedToday % account.customersPerSlot) === 0 ? slot++ : slot;
-            return slot;
-        } else {
-            account.currentSlot = getCurrentSlotAtStart(account);
-            return 1;
-        }
+        return calculateAssignedSlot(account);
     }
 }
 
-function getCurrentSlotAtStart(account: IAccount) {
-    let currentSlot: ICurrentSlot = {
-        date: moment.utc().valueOf(),
-        startToken: account.lastToken
+function calculateAssignedSlot(account: IAccount) {
+    let activeSlot = getActiveSlot(account);
+    let totalSlots = getTotalSlotsInDay(account);
+
+    while ((account.slotCount[activeSlot - 1] !== undefined) &&
+        (account.slotCount[activeSlot - 1] >= account.customersPerSlot)) {
+        activeSlot++;
     }
-    return currentSlot;
+
+    if (activeSlot > totalSlots) {
+        return -1;
+    } else {
+        if (account.slotCount[activeSlot - 1] === undefined) {
+            account.slotCount[activeSlot - 1] = 0;
+        }
+        account.slotCount.set(activeSlot - 1, <number>(account.slotCount[activeSlot - 1]) + 1);
+
+        return activeSlot;
+    }
+}
+
+function getActiveSlot(account: IAccount) {
+    let currentMoment = moment().utc().utcOffset("+05:30");
+    let fromMoment = moment(currentMoment).startOf("day")
+        .add(<MomentInputObject>account.dailyTiming.from);
+    let minutesPassed = currentMoment.diff(fromMoment, "minutes");
+    if (minutesPassed > 0) {
+        return Math.ceil((minutesPassed / account.slotDuration.minutes));
+    } else {
+        return 1;
+    }
+}
+
+function getTotalSlotsInDay(account: IAccount) {
+    let fromMoment = moment().utc().utcOffset("+05:30").startOf("day")
+        .add(account.dailyTiming.from as MomentInputObject);
+
+    let toMoment = moment().utc().utcOffset("+05:30").startOf("day")
+        .add(account.dailyTiming.to as MomentInputObject);
+
+    let minutesPassed = toMoment.diff(fromMoment, "minutes");
+    let numberOfSlots = Math.ceil(minutesPassed / account.slotDuration.minutes);
+    return numberOfSlots;
+
 }
 
 function currentSlotToMoment(account: IAccount, slot: number) {
-    let momentForSlot = moment()
-        .utc()
-        .utcOffset("+05:30")
-        .startOf("day")
-        .add(<MomentInputObject>account.dailyTiming.from)
-        .add(account.slotDuration.minutes * (slot - 1), "minutes");
+    let duration: MomentInputObject = { minutes: account.slotDuration.minutes * (slot - 1) };
+
+    let momentForSlot = moment().utc().utcOffset("+05:30").startOf("day")
+        .add(account.dailyTiming.from as MomentInputObject)
+        .add(duration);
+
+    let endMomentForSlot = moment(momentForSlot)
+        .add(account.slotDuration.minutes, "minutes");
+
+    let toMoment =
+        moment().utc().utcOffset("+05:30").startOf("day")
+            .add(<MomentInputObject>account.dailyTiming.to);
+
+    if (endMomentForSlot.diff(toMoment) > 0) {
+        endMomentForSlot = toMoment;
+    }
 
     return {
         from: momentForSlot.valueOf(),
-        to: momentForSlot.add(account.slotDuration.minutes, "minutes").valueOf()
+        to: endMomentForSlot.valueOf()
     };
 }

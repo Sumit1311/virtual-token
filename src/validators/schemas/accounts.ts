@@ -30,5 +30,5 @@ export const update = Joi.object({
     slotDuration: Joi.object({
         minutes: Joi.number().required()
     }),
-    customersPerSlot: Joi.number().required()
+    customersPerSlot: Joi.number()  
 });
