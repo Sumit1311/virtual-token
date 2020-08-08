@@ -6,6 +6,7 @@ import { handleError } from "../helpers/error";
 import GetCustomersDTO from "../dto/GetCustomersDTO";
 import CustomerService from "../services/customer.service";
 import IValidatedRequest from "../helpers/jwt/IValidatedRequest";
+import RemoveCustomerDTO from "../dto/RemoveCustomerDTO";
 
 export default class CustomerController {
     static customerService: CustomerService = new CustomerService();
@@ -28,6 +29,18 @@ export default class CustomerController {
         let response = ResponseBuilder.getDefaultResponse();
         try {
             response.setBody(await CustomerController.customerService.getCustomers(new GetCustomersDTO(<IValidatedRequest>req)));
+            response.setStatus(HttpStatus.OK);
+        } catch (error) {
+            response = handleError(error.message);
+            console.log(error);
+        }
+        res.status(HttpStatus.OK).send(response.getResponse()).end();
+    }
+
+    static async removeCustomerFromQueue(req: Request, res: Response) {
+        let response = ResponseBuilder.getDefaultResponse();
+        try {
+            response.setBody(await CustomerController.customerService.removeCustomerFromQueue(new RemoveCustomerDTO(<IValidatedRequest>req, { ...req.params })));
             response.setStatus(HttpStatus.OK);
         } catch (error) {
             response = handleError(error.message);

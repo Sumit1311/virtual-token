@@ -11,14 +11,15 @@ export interface IQueue extends Document {
     active: boolean;
     channel: ChannelTypeEnum;
     accountId: string;
-    allotedSlot:FromTo;
+    allotedSlot: FromTo;
 };
 
 const QueueSchema: Schema = new Schema({
     customerId: String,
     token: Number,
     mobileNo: String,
-    accountId:String,
+    accountId: String,
+    queueId: String,
     called: {
         type: Number,
         default: 0
@@ -28,7 +29,7 @@ const QueueSchema: Schema = new Schema({
         default: true
     },
     channel: Number,
-    allotedSlot:Object
+    allotedSlot: Object
 }, {
     timestamps: true
 });

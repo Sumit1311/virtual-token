@@ -1,5 +1,6 @@
 import QueueModel, { IQueue } from "../database/models/queue";
 import moment from "moment";
+import constants from "../constants";
 
 export default class QueueRepository {
     async addToQueue(queue: IQueue) {
@@ -12,8 +13,6 @@ export default class QueueRepository {
     }
 
     async getQueue(queue: IQueue) {
-        queue.active = true;
-
         return await this.find(queue, null, {
             sort: { "allotedSlot.from": 1, token: 1 }
         });
@@ -35,10 +34,19 @@ export default class QueueRepository {
         return await queue.save();
     }
 
+    async removeByQueueId(queue: IQueue) {
+        let record = await this.checkIfQueueRecordExistsByQueueId(queue);
+        if (record === null) {
+            throw new Error(constants.INVALID_QUEUE_ID);
+        } else {
+            record.active = false;
+            return await record.save();
+        }
+    }
+
     private async find(queue: IQueue, projection: any = null, options: any = null) {
         return await QueueModel.find({
             accountId: queue.accountId,
-            active: queue.active,
             "allotedSlot.from": { $gte: moment().utc().startOf("day").valueOf() }
         }, projection, options)
     }
@@ -58,6 +66,13 @@ export default class QueueRepository {
                         $lte: moment().utc().endOf("day").valueOf()
                     }
                 }]
+        });
+    }
+
+    private async checkIfQueueRecordExistsByQueueId(queue: IQueue) {
+        return await QueueModel.findOne({
+            accountId: queue.accountId,
+            queueId: queue.queueId
         });
     }
 }

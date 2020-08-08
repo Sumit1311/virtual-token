@@ -10,6 +10,7 @@ import ITwilioCall from "../helpers/twilio/ICall";
 import { getCallingPrefix } from "../helpers";
 import ITwilioSms from "../helpers/twilio/ISms";
 import GetCustomersDTO from "../dto/GetCustomersDTO";
+import RemoveCustomerDTO from "../dto/RemoveCustomerDTO";
 
 export default class CustomerService {
     private _voiceRepository: TwilioVoiceRepository = new TwilioVoiceRepository();
@@ -48,6 +49,11 @@ export default class CustomerService {
 
     async getCustomers(data: GetCustomersDTO) {
         let queue = await this._queueRepository.getQueue(toQueueSchema(data));
+        return queue;
+    }
+
+    async removeCustomerFromQueue(data:RemoveCustomerDTO) {
+        let queue = await this._queueRepository.removeByQueueId(toQueueSchema(data));
         return queue;
     }
 }

@@ -7,15 +7,19 @@ import { getGuid, getChannelType } from "../../helpers";
 import CallCustomerDTO from "../../dto/CallCustomerDTO";
 import GetCustomersDTO from "../../dto/GetCustomersDTO";
 import { FromTo } from "moment";
+import RemoveCustomerDTO from "../../dto/RemoveCustomerDTO";
 
-export default function toQueueSchema(data: AddCustomerDTO | CallCustomerDTO | GetCustomersDTO) {
+export default function toQueueSchema(data: AddCustomerDTO | CallCustomerDTO | GetCustomersDTO | RemoveCustomerDTO) {
     if (data instanceof AddCustomerDTO) {
         return addCustomerDTOToQueueSchema(data);
     } else if (data instanceof CallCustomerDTO) {
         return callCustomerDTOToQueueSchema(data);
     } else if (data instanceof GetCustomersDTO) {
         return getCustomersDTOToQueueSchema(<GetCustomersDTO>data);
-    } else {
+    } else if(data instanceof RemoveCustomerDTO) {
+        return removeCustomerDTOToQueueSchema(data);   
+    }
+     else {
         throw new Error(constants.INVALID_DTO);
     }
 }
@@ -39,5 +43,12 @@ function callCustomerDTOToQueueSchema(data: CallCustomerDTO) {
 function getCustomersDTOToQueueSchema(data: GetCustomersDTO) {
     let queue = new QueueModel();
     queue.accountId = data.accountId;
+    return queue;
+}
+
+function removeCustomerDTOToQueueSchema(data:RemoveCustomerDTO) {
+    let queue = new QueueModel();
+    queue.accountId = data.accountId;
+    queue.queueId = data.queueId;
     return queue;
 }
