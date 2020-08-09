@@ -34,12 +34,14 @@ export default class QueueRepository {
         return await queue.save();
     }
 
-    async removeByQueueId(queue: IQueue) {
+    async update(queue: IQueue) {
         let record = await this.checkIfQueueRecordExistsByQueueId(queue);
         if (record === null) {
             throw new Error(constants.INVALID_QUEUE_ID);
         } else {
-            record.active = false;
+            if (queue.active !== undefined && queue.active !== null) {
+                record.active = queue.active;
+            }
             return await record.save();
         }
     }

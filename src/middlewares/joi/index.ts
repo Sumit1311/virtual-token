@@ -15,6 +15,18 @@ export const validateBody = (schema: SchemaLike) => {
     }
 };
 
+export const validateParamAndBody = (schema: SchemaLike) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const response = ResponseBuilder.getDefaultResponse();
+        const error = joiHelper.validateObjectSchema({ ...req.body, ...req.params }, schema);
+        if (error) {
+            response.setBody(error);
+            return res.status(response.getResponse().status).send(response.getResponse());
+        }
+        return next();
+    }
+};
+
 export const validateQuery = (schema: SchemaLike) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const response = ResponseBuilder.getDefaultResponse();
