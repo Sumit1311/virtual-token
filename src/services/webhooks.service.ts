@@ -49,7 +49,7 @@ export default class WebhooksService {
             allotedSlot
         });
 
-        if (body.channel === constants.MYOPERATOR) {
+        if (body.channel === constants.MYOPERATOR || body.channel === constants.MISSEDDIAL) {
             let sender = new FastSMSSender()
             await sender.send(<ISMS>{
                 to: body.mobileNo,

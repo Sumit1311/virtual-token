@@ -2,6 +2,7 @@ export default {
     TWILIO: "twilio",
     ONERING: "onering",
     MYOPERATOR:"myop",
+    MISSEDDIAL:"misseddial",
     PHONE_NUMBER_ALREADY_ADDED: "Phone number is already associated with an account",
     ORGANISATION_NAME_EXISTS: "Organisation name already exists.",
     USER_ALREADY_EXISTS: "User already exists",
