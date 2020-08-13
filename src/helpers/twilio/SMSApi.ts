@@ -1,7 +1,8 @@
 import TwilioClient from "./client";
 import ITwilioSms from "./ISms";
+import BaseSMSSender, { ISMS } from "../sms/SMSSender";
 
-export default class TwilioSMSAPIHelper {
+export default class TwilioSMSAPIHelper implements BaseSMSSender {
     constructor() {
     }
     async send(data: ITwilioSms) {

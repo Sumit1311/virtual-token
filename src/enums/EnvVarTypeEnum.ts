@@ -5,5 +5,6 @@ export enum EnvVarTypeEnum {
     CallBatchSize,
     IntervalBetweenCustomer,
     JwtSecretKey,
-    TwilioPhoneNumber
+    TwilioPhoneNumber,
+    FastSMSAuthKey
 }

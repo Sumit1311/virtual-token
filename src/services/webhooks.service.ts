@@ -7,6 +7,8 @@ import toQueueSchema from "../database/schemas/toQueueSchema";
 import moment, { MomentInputObject } from "moment";
 import { IAccount } from "../database/models/account";
 import constants from "../constants";
+import FastSMSSender from "../helpers/fastsms/FastSMSSender";
+import { ISMS } from "../helpers/sms/SMSSender";
 
 export default class WebhooksService {
     private _webhooksRepository: WebhooksRepository = new WebhooksRepository();
@@ -17,6 +19,9 @@ export default class WebhooksService {
     }
 
     async enqueue(body: AddCustomerDTO) {
+        if (body.channel === constants.MYOPERATOR && body.department !== constants.APPOINTMENT_DEPARTMENT) {
+            return "";
+        }
         let account = toAccountSchema(body);
         let assignedToken;
         let accountRecord = await this._accountRepository.findAccountByMissedCallNumber(account);
@@ -38,11 +43,22 @@ export default class WebhooksService {
         assignedToken = queue.token;
         allotedSlot.from = <number>queue.allotedSlot.from
         allotedSlot.to = <number>queue.allotedSlot.to;
-        return this._webhooksRepository.getEnqueueResponse({
+        let enqueResponse = this._webhooksRepository.getEnqueueResponse({
             channel: body.channel,
             assignedToken,
             allotedSlot
         });
+
+        if (body.channel === constants.MYOPERATOR) {
+            let sender = new FastSMSSender()
+            await sender.send(<ISMS>{
+                to: body.mobileNo,
+                body: enqueResponse.response
+            });
+        }
+
+        return enqueResponse
+
     }
 }
 

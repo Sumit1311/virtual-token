@@ -1,7 +1,9 @@
-export default interface ITwilioSms {
-    sid:string;
-    authToken:string;
+import { ISMS } from "../sms/SMSSender";
+
+export default interface ITwilioSms extends ISMS {
+    sid: string;
+    authToken: string;
     from: string;
-    to:string;
-    body:string;
+    to: string;
+    body: string;
 }
