@@ -6,5 +6,6 @@ export enum EnvVarTypeEnum {
     IntervalBetweenCustomer,
     JwtSecretKey,
     TwilioPhoneNumber,
-    FastSMSAuthKey
+    FastSMSAuthKey,
+    SendGridAPIKey
 }

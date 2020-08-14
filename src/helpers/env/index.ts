@@ -19,6 +19,8 @@ export function getEnvValue(variable: EnvVarTypeEnum) {
             return process.env.TWILIO_PHONE_NUMBER || ""
         case EnvVarTypeEnum.FastSMSAuthKey:
             return process.env.FAST_SMS_AUTH_KEY || ""
+        case EnvVarTypeEnum.SendGridAPIKey:
+            return process.env.SENDGRID_API_KEY || ""
         default:
             throw new Error(constants.ENV_VAR_NOT_FOUND);
     }
