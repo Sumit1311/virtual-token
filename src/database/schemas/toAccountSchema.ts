@@ -1,5 +1,5 @@
 import AccountModel, { IAccount } from "../models/account";
-import AddCustomerDTO from "../../dto/AddCustomerDTO";
+import EnqueueCustomerDTO from "../../dto/EnqueueCustomerDTO";
 import AddAccountDTO from "../../dto/AddAccountDTO";
 import CallCustomerDTO from "../../dto/CallCustomerDTO";
 import { getGuid } from "../../helpers";
@@ -14,11 +14,11 @@ import moment, { MomentInputObject, MomentObjectOutput } from "moment";
 import DateTimeHelper from "../../helpers/datetime";
 import mongoose, { Mongoose } from "mongoose";
 
-export default function toAccountSchema(data: AddAccountDTO | AddCustomerDTO | CallCustomerDTO | GetCustomersDTO | SignupDTO | UpdateAccountDTO | GetAccountDTO) {
+export default function toAccountSchema(data: AddAccountDTO | EnqueueCustomerDTO | CallCustomerDTO | GetCustomersDTO | SignupDTO | UpdateAccountDTO | GetAccountDTO) {
     if (data instanceof AddAccountDTO) {
         return addAccountDTOToAccountSchema(<AddAccountDTO>data);
-    } else if (data instanceof AddCustomerDTO) {
-        return addCustomerDTOToAccountSchema(<AddCustomerDTO>data);
+    } else if (data instanceof EnqueueCustomerDTO) {
+        return addCustomerDTOToAccountSchema(<EnqueueCustomerDTO>data);
     } else if (data instanceof CallCustomerDTO) {
         return callCustomerDTOToAccountSchema(<CallCustomerDTO>data);
     } else if (data instanceof GetCustomersDTO) {
@@ -54,7 +54,7 @@ function addAccountDTOToAccountSchema(data: AddAccountDTO) {
 
 }
 
-function addCustomerDTOToAccountSchema(data: AddCustomerDTO) {
+function addCustomerDTOToAccountSchema(data: EnqueueCustomerDTO) {
     let account: IAccount = new AccountModel();
     account.missedCallNumber = data.missedCallNumber;
     return account;

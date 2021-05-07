@@ -8,6 +8,7 @@ import toUserSchema from "../database/schemas/toUserSchema";
 import UpdateAccountDTO from "../dto/UpdateAccountDTO";
 import GetAccountDTO from "../dto/GetAccountDTO";
 import EmailRepository from "../repositories/email.repository";
+import { IAccount } from "../database/models/account";
 
 export default class AccountService {
     private _accountRepository: AccountRepository = new AccountRepository();

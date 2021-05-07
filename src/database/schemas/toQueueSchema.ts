@@ -1,5 +1,5 @@
 import AddAccountDTO from "../../dto/AddAccountDTO";
-import AddCustomerDTO from "../../dto/AddCustomerDTO";
+import EnqueueCustomerDTO from "../../dto/EnqueueCustomerDTO";
 import constants from "../../constants";
 import { IAccount } from "../models/account";
 import QueueModel, { IQueue } from "../models/queue";
@@ -9,8 +9,8 @@ import GetCustomersDTO from "../../dto/GetCustomersDTO";
 import { FromTo } from "moment";
 import UpdateCustomerDTO from "../../dto/UpdateCustomerDTO";
 
-export default function toQueueSchema(data: AddCustomerDTO | CallCustomerDTO | GetCustomersDTO | UpdateCustomerDTO) {
-    if (data instanceof AddCustomerDTO) {
+export default function toQueueSchema(data: EnqueueCustomerDTO | CallCustomerDTO | GetCustomersDTO | UpdateCustomerDTO) {
+    if (data instanceof EnqueueCustomerDTO) {
         return addCustomerDTOToQueueSchema(data);
     } else if (data instanceof CallCustomerDTO) {
         return callCustomerDTOToQueueSchema(data);
@@ -24,7 +24,7 @@ export default function toQueueSchema(data: AddCustomerDTO | CallCustomerDTO | G
     }
 }
 
-function addCustomerDTOToQueueSchema(data: AddCustomerDTO) {
+function addCustomerDTOToQueueSchema(data: EnqueueCustomerDTO) {
     let queue: IQueue = new QueueModel();
     queue.queueId = getGuid();
     queue.mobileNo = data.mobileNo;

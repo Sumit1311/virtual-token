@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import WebhooksService from "../services/webhooks.service";
-import AddCustomerDTO from "../dto/AddCustomerDTO";
+import EnqueueCustomerDTO from "../dto/EnqueueCustomerDTO";
 import { handleError } from "../helpers/error";
 import HttpStatus from "http-status-codes";
 
@@ -9,7 +9,7 @@ export default class WebhooksController {
 
     static async enqueue(req: Request, res: Response) {
         try {
-            let body: AddCustomerDTO = new AddCustomerDTO({ ...req.query, _channel: req.params.channel });
+            let body: EnqueueCustomerDTO = new EnqueueCustomerDTO({ ...req.query, _channel: req.params.channel });
             console.log(req.query);
             let content: any = await WebhooksController.webhooksService.enqueue(body);
             return res.contentType(content.contentType).end(content.response);

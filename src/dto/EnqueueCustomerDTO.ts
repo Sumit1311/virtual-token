@@ -1,9 +1,9 @@
-export default class AddCustomerDTO {
+export default class EnqueueCustomerDTO {
     mobileNo: string = "";
     missedCallNumber: string;
-    channel:string;
-    department:string;
-    
+    channel: string;
+    department: string;
+
     constructor(data: any) {
         this.mobileNo = data.From || data.from;
         this.missedCallNumber = data.Caller || data.caller;
